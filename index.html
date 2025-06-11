@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klarisana Contact Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://mcusercontent.com/24424715d39ee882cce54fef0/images/c83eed89-5e04-ab7e-6a65-f7a9259d14d6.png" alt="Klarisana Logo" class="logo">
+            </div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Your Phone</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Full Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="insurance">Insurance</label>
+                    <select id="insurance" name="insurance" required>
+                        <option value="">Select Insurance</option>
+                        <option value="Humana">Humana</option>
+                        <option value="Cigna">Cigna</option>
+                        <option value="Medicare">Medicare</option>
+                        <option value="Medicaid">Medicaid</option>
+                        <option value="United">United</option>
+                        <option value="Blue Cross">Blue Cross</option>
+                        <option value="Aetna">Aetna</option>
+                        <option value="Others">Others</option>
+                        <option value="No Insurance">No Insurance</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>What's your preferred clinic?</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="preferredClinic" value="Denver, CO" required>
+                            Denver, CO
+                        </label>
+                        <label>
+                            <input type="radio" name="preferredClinic" value="Centennial, CO">
+                            Centennial, CO
+                        </label>
+                        <label>
+                            <input type="radio" name="preferredClinic" value="Austin, TX">
+                            Austin, TX
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>How did you hear about Klarisana?</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="referralSource" value="Ads" required>
+                            Ads
+                        </label>
+                        <label>
+                            <input type="radio" name="referralSource" value="Search">
+                            Search
+                        </label>
+                        <label>
+                            <input type="radio" name="referralSource" value="Referral">
+                            Referral
+                        </label>
+                        <label>
+                            <input type="radio" name="referralSource" value="Friend / Colleague">
+                            Friend / Colleague
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalInfo">Is there something else we should know?</label>
+                    <textarea id="additionalInfo" name="additionalInfo" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="consent" required>
+                        I consent to receiving email and SMS communication
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+            
+            <div class="privacy-notice">
+                <p><strong>By submitting this form, you agree to receive SMS messages from Klarisana related to intake and marketing. You may reply STOP to opt-out at any time. Messages and data rates may apply. Message frequency will vary</strong></p>
+                <p>Learn more on our <a href="https://www.klarisana.com/legal-info/privacy-policy/" target="_blank">Privacy Policy</a> page and <a href="https://www.klarisana.com/legal-info/terms-and-conditions/" target="_blank">Terms & Conditions</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 

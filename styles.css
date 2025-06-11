@@ -1,0 +1,141 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.6;
+    background-color: #3717c7;
+    color: #FFFFFF;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo {
+    max-width: 50%;
+    height: auto;
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+}
+
+.submit-btn {
+    background-color: #FFFFFF;
+    color: #3717c7;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.privacy-notice {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.privacy-notice a {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.privacy-notice a:hover {
+    text-decoration: none;
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 20px;
+    }
+    
+    form {
+        padding: 20px;
+    }
+    
+    .logo {
+        max-width: 80%;
+    }
+} 
