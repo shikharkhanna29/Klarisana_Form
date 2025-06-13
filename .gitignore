@@ -9,6 +9,7 @@ node_modules/
 # Configuration files with sensitive data
 config.json
 google-sheets-config.js
+google-credentials.json
 
 # IDE files
 .vscode/
@@ -19,4 +20,3 @@ google-sheets-config.js
 Thumbs.db
 
 # New file
-google-credentials.json 

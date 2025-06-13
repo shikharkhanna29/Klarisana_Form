@@ -1,86 +1,45 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { appendToSheet } = require('./google-sheets');
-const { createClient } = require('@supabase/supabase-js');
-const config = require('./config.json');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
-// Configure CORS for production
-const allowedOrigins = [
-    'http://localhost:8080',
-    'https://klarisana-form-frontend.onrender.com'
-];
-
+// Middleware
 app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type']
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://your-app-name.onrender.com'] // Replace with your actual domain
+        : ['http://localhost:8080', 'http://127.0.0.1:8080']
 }));
-
 app.use(express.json());
-
-// Initialize Supabase client with environment variables
-const supabase = createClient(
-    process.env.SUPABASE_URL || config.supabaseUrl,
-    process.env.SUPABASE_ANON_KEY || config.supabaseAnonKey
-);
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'ok',
-        environment: process.env.NODE_ENV || 'development'
-    });
+    res.json({ status: 'ok' });
 });
 
-// Form submission endpoint
-app.post('/submit-form', async (req, res) => {
+// Google Sheets submission endpoint
+app.post('/submit-to-sheets', async (req, res) => {
     try {
-        const formData = req.body;
-
-        // Save to Supabase
-        const { data: supabaseData, error: supabaseError } = await supabase
-            .from('form_submissions')
-            .insert([formData]);
-
-        if (supabaseError) throw supabaseError;
-
-        // Save to Google Sheets
-        await appendToSheet(formData);
-
-        res.status(200).json({ 
-            success: true, 
-            message: 'Form submitted successfully',
-            data: supabaseData 
-        });
+        const result = await appendToSheet(req.body);
+        res.json({ success: true, data: result });
     } catch (error) {
-        console.error('Error submitting form:', error);
+        console.error('Error submitting to Google Sheets:', error);
         res.status(500).json({ 
             success: false, 
-            message: 'Error submitting form',
-            error: error.message 
+            error: error.message,
+            details: error.details || error.errors || error
         });
     }
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message
-    });
+// Serve the main page for all other routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port} in ${process.env.NODE_ENV || 'development'} mode`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 }); 
