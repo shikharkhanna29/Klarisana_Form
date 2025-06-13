@@ -1,12 +1,16 @@
 const { google } = require('googleapis');
-const GOOGLE_SHEETS_CONFIG = require('./google-sheets-config');
+const config = require('./google-sheets-config');
+const credentials = require('./google-credentials.json');
 
-// Initialize the Google Sheets API
-const auth = new google.auth.GoogleAuth({
-    credentials: GOOGLE_SHEETS_CONFIG.credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+// Create a JWT client using the service account credentials
+const auth = new google.auth.JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key,
+    ['https://www.googleapis.com/auth/spreadsheets']
+);
 
+// Create Google Sheets API client
 const sheets = google.sheets({ version: 'v4', auth });
 
 /**
@@ -16,7 +20,7 @@ const sheets = google.sheets({ version: 'v4', auth });
  */
 async function appendToSheet(formData) {
     try {
-        // Convert form data to array format for Google Sheets
+        // Format the data according to the headers
         const values = [
             [
                 formData.firstName,
@@ -26,25 +30,26 @@ async function appendToSheet(formData) {
                 formData.dateOfBirth,
                 formData.insurance,
                 formData.preferredClinic,
-                formData.referralSource,
+                formData.howDidYouHear,
                 formData.additionalInfo,
-                formData.consent,
-                new Date().toISOString() // Timestamp
+                formData.consentStatus,
+                new Date().toISOString()
             ]
         ];
 
         const response = await sheets.spreadsheets.values.append({
-            spreadsheetId: GOOGLE_SHEETS_CONFIG.spreadsheetId,
-            range: `${GOOGLE_SHEETS_CONFIG.sheetName}!A:K`,
-            valueInputOption: 'USER_ENTERED',
+            spreadsheetId: config.spreadsheetId,
+            range: config.range,
+            valueInputOption: 'RAW',
             resource: {
-                values: values,
-            },
+                values: values
+            }
         });
 
+        console.log('Data appended successfully:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error appending to Google Sheet:', error);
+        console.error('Error appending data to sheet:', error);
         throw error;
     }
 }

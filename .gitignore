@@ -16,4 +16,7 @@ google-sheets-config.js
 
 # OS files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# New file
+google-credentials.json 
