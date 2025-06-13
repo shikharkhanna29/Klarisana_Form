@@ -8,6 +8,7 @@ node_modules/
 
 # Configuration files with sensitive data
 config.json
+google-sheets-config.js
 
 # IDE files
 .vscode/

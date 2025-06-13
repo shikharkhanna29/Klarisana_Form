@@ -1,0 +1,61 @@
+Create a webpage that connects to a DB on my supabase
+Webpage - it's a form with below fields
+    - First Name
+    - Last Name
+    - Your Email
+    - Your Phone
+    - Full Date of Birth
+    - Insurance - this is a dropdown fields
+        - Humana
+        - Cigna
+        - Medicare
+        - Medicaid
+        - United
+        - Blue Cross
+        - Aetna
+        - Others
+        - No Insurance
+    - What's your preferred clinic? (radio button)
+        - Denver, CO
+        - Centennial, CO
+        - Austin, TX
+    - How did you hear about Klarisana? (radio button)
+        - Ads
+        - Search
+        - Referral
+        - Friend / Colleague
+    - Is there soemthing else we should know?
+    - I consent to receiving email and SMS communication (radio button)
+        - I consent
+    - Submit button
+
+The HTML code for the page I want to replicate is as follows -
+
+<!doctype html>
+<html style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;height: auto;min-height: 100vh;box-sizing: border-box !important;">
+<head style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box !important;">
+    <meta charset="UTF-8" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box !important;">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box !important;">
+    <title style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box !important;">Website Contact Form</title>
+    
+    <!-- Include all the CSS styles from the original template -->
+    <style type="text/css">
+        /* All the CSS styles from the original template */
+    </style>
+    
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i|Nunito:400,400i,700,700i" rel="stylesheet">
+</head>
+<body>
+    <!-- Include all the HTML structure from the original template -->
+</body>
+</html>
+
+Once the Submit button is pressed I want the data going into my supabase
+
+Additional Requirements:
+- Integrate with Google Sheets to store form submissions
+- When the form is submitted, the data should be:
+  1. Saved to Supabase database
+  2. Added as a new row in the specified Google Sheet
+- The Google Sheets integration should include all form fields as columns 

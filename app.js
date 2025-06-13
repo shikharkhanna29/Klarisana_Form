@@ -4,6 +4,9 @@ const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONF
 // Get form element
 const form = document.getElementById('contactForm');
 
+// Backend URL - will be replaced during deployment
+const BACKEND_URL = 'http://localhost:3001';
+
 // Handle form submission
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -34,6 +37,24 @@ form.addEventListener('submit', async (e) => {
             .select();
 
         if (error) throw error;
+
+        // Send data to Google Sheets backend
+        await fetch(`${BACKEND_URL}/submit-to-sheets`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstName: form.firstName.value,
+                lastName: form.lastName.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                dateOfBirth: form.dob.value,
+                insurance: form.insurance.value,
+                preferredClinic: form.preferredClinic.value,
+                referralSource: form.referralSource.value,
+                additionalInfo: form.additionalInfo.value,
+                consent: form.consent.checked ? 'I consent' : 'No'
+            })
+        });
 
         // Show success message
         alert('Thank you for your submission! We will contact you soon.');

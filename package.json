@@ -1,0 +1,34 @@
+{
+  "name": "cursor-trial",
+  "version": "1.0.0",
+  "description": "A contact form for Klarisana that submits data to a Supabase database.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "http-server -p 8080",
+    "server": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shikharkhanna29/KlarisanaDemo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shikharkhanna29/KlarisanaDemo/issues"
+  },
+  "homepage": "https://github.com/shikharkhanna29/KlarisanaDemo#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "googleapis": "^150.0.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
