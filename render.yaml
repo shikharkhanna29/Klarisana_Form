@@ -10,6 +10,12 @@ services:
         value: production
       - key: PORT
         value: 3001
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true
 
   # Frontend service
   - type: web
@@ -19,4 +25,5 @@ services:
     startCommand: http-server -p $PORT
     envVars:
       - key: PORT
-        value: 8080 
+        value: 8080
+    autoDeploy: true 
