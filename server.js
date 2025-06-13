@@ -1,27 +1,54 @@
 const express = require('express');
 const cors = require('cors');
 const { appendToSheet } = require('./google-sheets');
+const { createClient } = require('@supabase/supabase-js');
+const config = require('./config.json');
 
 const app = express();
+const port = process.env.PORT || 3001;
 
-// Configure CORS
-app.use(cors({
-    origin: ['http://localhost:8080', 'https://shikharkhanna29.github.io'],
-    methods: ['POST', 'GET', 'OPTIONS'],
-    allowedHeaders: ['Content-Type']
-}));
-
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-app.post('/submit-to-sheets', async (req, res) => {
+// Initialize Supabase client
+const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+// Form submission endpoint
+app.post('/submit-form', async (req, res) => {
     try {
         const formData = req.body;
+
+        // Save to Supabase
+        const { data: supabaseData, error: supabaseError } = await supabase
+            .from('form_submissions')
+            .insert([formData]);
+
+        if (supabaseError) throw supabaseError;
+
+        // Save to Google Sheets
         await appendToSheet(formData);
-        res.status(200).json({ message: 'Data added to Google Sheet!' });
+
+        res.status(200).json({ 
+            success: true, 
+            message: 'Form submitted successfully',
+            data: supabaseData 
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error submitting form:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error submitting form',
+            error: error.message 
+        });
     }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+}); 
