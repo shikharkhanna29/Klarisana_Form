@@ -8,9 +8,9 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-app-name.onrender.com'] // Replace with your actual domain
-        : ['http://localhost:8080', 'http://127.0.0.1:8080']
+    origin: '*', // More permissive for development
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,8 +22,10 @@ app.get('/health', (req, res) => {
 
 // Google Sheets submission endpoint
 app.post('/submit-to-sheets', async (req, res) => {
+    console.log('Received submission request:', req.body);
     try {
         const result = await appendToSheet(req.body);
+        console.log('Google Sheets submission successful:', result);
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error submitting to Google Sheets:', error);

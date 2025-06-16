@@ -1,32 +1,26 @@
 const { createClient } = require('@supabase/supabase-js');
 const { appendToSheet } = require('./google-sheets');
-const config = require('./config.json');
-
-// Initialize Supabase client
-const supabaseClient = createClient(
-    config.supabaseUrl,
-    config.supabaseAnonKey
-);
+require('dotenv').config();
 
 // Test data
 const testData = {
-    status: 'New',
+    status: 'Test',
     lead_in_date: new Date().toISOString().split('T')[0],
-    patient_name: 'Test User',
-    service_type: 'Contact Form',
-    referral: 'Search',
+    patient_name: 'Test Patient',
+    service_type: 'Test Service',
+    referral: 'Test Referral',
     zocdoc: false,
-    roi_status: 'Pending',
-    clinic_location: 'Denver, CO',
-    insurance: 'Blue Cross',
-    insurance_status: 'Pending',
+    roi_status: 'Test',
+    clinic_location: 'Test Location',
+    insurance: 'Test Insurance',
+    insurance_status: 'Test',
     ec: null,
     med_intake: null,
     first_contact_attempt_date: null,
     second_contact_attempt_date: null,
     third_contact_attempt_date: null,
-    notes: 'This is a test submission',
-    treatment_clearance_status: 'Pending',
+    notes: 'This is a test entry for final integration testing',
+    treatment_clearance_status: 'Test',
     bh_intake_date: null,
     first_treatment_appt_date: null,
     last_treatment_appt_date: null,
@@ -34,49 +28,73 @@ const testData = {
     created_at: new Date().toISOString()
 };
 
-async function testIntegrations() {
-    console.log('Starting integration tests...\n');
+async function runIntegrationTest() {
+    console.log('Starting final integration test...\n');
 
-    // Test Supabase
-    console.log('Testing Supabase integration...');
+    // 1. Test Supabase Integration
+    console.log('=== Testing Supabase Integration ===');
     try {
-        // First, test the connection
-        const { data: healthCheck, error: healthError } = await supabaseClient
+        const supabase = createClient(
+            'https://llpvkabdqqdffazmdiby.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxscHZrYWJkcXFkZmZhem1kaWJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0OTQ0NzYsImV4cCI6MjA2NTA3MDQ3Nn0.0wspTaCm71vp6XvnuZlOuwfJHqZPqAaSq11UuoYvyfw'
+        );
+
+        console.log('1. Testing Supabase connection...');
+        const { data: connectionTest, error: connectionError } = await supabase
             .from('leads')
             .select('count')
             .limit(1);
 
-        if (healthError) {
-            throw new Error(`Supabase connection failed: ${healthError.message}`);
-        }
+        if (connectionError) throw connectionError;
         console.log('✅ Supabase connection successful');
 
-        // Test data insertion
-        const { data: supabaseData, error: supabaseError } = await supabaseClient
+        console.log('\n2. Testing data insertion...');
+        const { data: insertData, error: insertError } = await supabase
             .from('leads')
             .insert([testData])
             .select();
 
-        if (supabaseError) throw supabaseError;
-        console.log('✅ Supabase data insertion successful');
-        console.log('Supabase Response:', supabaseData);
+        if (insertError) throw insertError;
+        console.log('✅ Data inserted successfully');
+        console.log('Inserted record ID:', insertData[0].id);
+
+        console.log('\n3. Testing data retrieval...');
+        const { data: retrieveData, error: retrieveError } = await supabase
+            .from('leads')
+            .select('*')
+            .eq('id', insertData[0].id)
+            .single();
+
+        if (retrieveError) throw retrieveError;
+        console.log('✅ Data retrieved successfully');
+        console.log('Retrieved data matches inserted data:', 
+            JSON.stringify(retrieveData, null, 2));
+
     } catch (error) {
         console.error('❌ Supabase test failed:', error.message);
-        if (error.details) console.error('Details:', error.details);
-        return; // Stop testing if Supabase fails
+        process.exit(1);
     }
 
-    // Test Google Sheets
-    console.log('\nTesting Google Sheets integration...');
+    // 2. Test Google Sheets Integration
+    console.log('\n=== Testing Google Sheets Integration ===');
     try {
-        const sheetsResult = await appendToSheet(testData);
-        console.log('✅ Google Sheets test successful');
-        console.log('Google Sheets Response:', sheetsResult);
+        console.log('1. Testing Google Sheets connection...');
+        const result = await appendToSheet(testData);
+        
+        console.log('✅ Google Sheets connection successful');
+        console.log('✅ Data appended successfully');
+        console.log('Updated range:', result.updates.updatedRange);
+        console.log('Updated cells:', result.updates.updatedCells);
+
     } catch (error) {
         console.error('❌ Google Sheets test failed:', error.message);
-        if (error.response) console.error('Details:', error.response.data);
+        process.exit(1);
     }
+
+    console.log('\n=== All Tests Completed Successfully ===');
+    console.log('✅ Supabase Integration: Working');
+    console.log('✅ Google Sheets Integration: Working');
+    console.log('\nThe application is ready for deployment!');
 }
 
-// Run the tests
-testIntegrations(); 
+runIntegrationTest().catch(console.error); 

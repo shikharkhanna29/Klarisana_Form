@@ -41,7 +41,7 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
         submitButton.textContent = 'Submitting...';
 
         // Submit to both Supabase and Google Sheets
-        const [supabaseResult, sheetsResult] = await Promise.all([
+        const [supabaseResult, sheetsResponse] = await Promise.all([
             // Submit to Supabase
             supabaseClient
                 .from('leads')
@@ -49,17 +49,23 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
                 .select(),
             
             // Submit to Google Sheets
-            fetch('/submit-to-sheets', {
+            fetch(`${API_URL}/submit-to-sheets`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData)
-            }).then(res => res.json())
+            })
         ]);
 
+        // Parse the Google Sheets response
+        const sheetsResult = await sheetsResponse.json();
+        
+        console.log('Supabase Result:', supabaseResult);
+        console.log('Google Sheets Result:', sheetsResult);
+
         if (supabaseResult.error) throw supabaseResult.error;
-        if (sheetsResult.error) throw new Error(sheetsResult.error);
+        if (!sheetsResult.success) throw new Error(sheetsResult.error || 'Failed to submit to Google Sheets');
 
         // Show success message
         alert('Thank you for your submission! We will contact you soon.');
